@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: becb7f9c8721f124ba9424e2629d0e5b, type: 3}
   m_Name: TrapDammage
   m_EditorClassIdentifier: 
-  dammage: 10
+  dammage: 1

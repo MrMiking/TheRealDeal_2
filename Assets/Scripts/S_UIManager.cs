@@ -1,54 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class S_UIManager : MonoBehaviour
 {
-    [SerializeField] Slider _slider;
     [SerializeField] RSO_EntityLife _entityLifeData;
     [SerializeField] RSE_EventChannel OnEntityLifeChange;
-    [SerializeField] TextMeshProUGUI _textlife;
+    [SerializeField] List<GameObject> _heartList;
 
-
-
-    private void Awake()
-    {
-        _slider.maxValue = _entityLifeData.entityLife;
-        _slider.minValue = 0;
-        UpdateSliderBar();
-    }
     void Start()
     {
-        OnEntityLifeChange.RegisterListener(UpdateSliderBar);
+        OnEntityLifeChange.RegisterListener(UpdateHeart);
     }
 
-    void Update()
+    public void UpdateHeart()
     {
-        
-    }
-
-    public void UpdateSliderBar()
-    {
-        _slider.value = _entityLifeData.entityLife;
-        _textlife.text = _entityLifeData.entityLife.ToString();
-
-        if(_slider.value <= 0){
-            ReloadScene();
+        if(_entityLifeData.entityLife <= _heartList.Count){
+            for(int i = 0; i < _heartList.Count - _entityLifeData.entityLife ; i++ ){
+                _heartList[i].SetActive(false);
+            }
         }
-
     }
 
     private void OnDestroy()
     {
-        OnEntityLifeChange.UnregisterListener(UpdateSliderBar);
-    }
-
-    public void ReloadScene()
-    {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentSceneName);
+        OnEntityLifeChange.UnregisterListener(UpdateHeart);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class S_PlayerLifeManager : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class S_PlayerLifeManager : MonoBehaviour
         {
             _playerLifeData.entityLife = 0;
             OnPlayerDeathEvent.RaiseEvent();
-            Debug.Log("Dead");
+            ReloadScene();
         }
 
         OnPlayerLifeChange.RaiseEvent();
@@ -58,5 +59,11 @@ public class S_PlayerLifeManager : MonoBehaviour
     {
         OnPlayerHit.UnregisterListener(RemoveLife);
         _playerLifeData.entityLife = _maxLife;
+    }
+
+    public void ReloadScene()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
     }
 }
