@@ -7,16 +7,22 @@ using UnityEngine.UI;
 
 public class S_UIManager : MonoBehaviour
 {
+    [SerializeField] Slider _slider;
     [SerializeField] RSO_EntityLife _entityLifeData;
-    [SerializeField] RSE_EventChannel OnPlayerDeathEvent;
-    [SerializeField] GameObject _gameOverPanel;
+    [SerializeField] RSE_EventChannel OnEntityLifeChange;
+    [SerializeField] TextMeshProUGUI _textlife;
 
 
+
+    private void Awake()
+    {
+        _slider.maxValue = _entityLifeData.entityLife;
+        _slider.minValue = 0;
+        UpdateSliderBar();
+    }
     void Start()
     {
-        _gameOverPanel.SetActive(false);
-
-        OnPlayerDeathEvent.RegisterListener(DisplayGameOverPanel);
+        OnEntityLifeChange.RegisterListener(UpdateSliderBar);
     }
 
     void Update()
@@ -24,28 +30,20 @@ public class S_UIManager : MonoBehaviour
         
     }
 
-    public void UpdateUI()
+    public void UpdateSliderBar()
     {
-    }
+        _slider.value = _entityLifeData.entityLife;
+        _textlife.text = _entityLifeData.entityLife.ToString();
 
+        if(_slider.value <= 0){
+            ReloadScene();
+        }
 
-    public void DisplayGameOverPanel()
-    {
-        StartCoroutine(WaitToDisplay());
-    }
-
-    private IEnumerator WaitToDisplay()
-    {
-        yield return new WaitForSeconds(1);
-        _gameOverPanel.SetActive(true);
-        
     }
 
     private void OnDestroy()
     {
-        OnPlayerDeathEvent.UnregisterListener(DisplayGameOverPanel);
-
-        
+        OnEntityLifeChange.UnregisterListener(UpdateSliderBar);
     }
 
     public void ReloadScene()
